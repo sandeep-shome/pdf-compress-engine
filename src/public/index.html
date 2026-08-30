@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF Compressor Engine</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body>
+    <div class="w-full h-screen flex flex-col items-center justify-center">
+      <form
+        accept-charset="utf-8"
+        class="w-5/6 md:3/6 lg:w-2/6 p-6 border border-gray-300 rounded-sm"
+      >
+        <label
+          for="file"
+          class="w-full flex flex-col items-center justify-center h-60 border-[2px] border-dotted border-gray-300 relative"
+        >
+          <i
+            class="fa-regular fa-file-pdf absolute top-2/4 left-2/4 -translate-2/4 -z-10 text-gray-200 text-8xl"
+          ></i>
+          <span id="placeholder-name" class="font-semibold">Please select a PDF file</span>
+          <span id="placeholder-size" class="font-semibold mt-2 display-none"></span>
+          <input type="file" name="file" id="file" accept="application/pdf" hidden />
+        </label>
+        <div class="mt-6">
+          <label for="level">Compression level</label>
+          <input
+            type="range"
+            name=""
+            id="level"
+            min="1"
+            max="3"
+            value="1"
+            class="w-full accent-blue-400 accent-bg-gray-300"
+            disabled
+          />
+          <div class="w-full flex items-center justify-between">
+            <span class="text-green-600">Low</span>
+            <span class="text-yellow-600">Medium</span>
+            <span class="text-red-600">High</span>
+          </div>
+        </div>
+        <button
+          type="submit"
+          class="w-full h-10 bg-blue-400 mt-6 rounded-sm cursor-pointer text-white disabled:bg-blue-200 disabled:cursor-not-allowed"
+          disabled
+        >
+          Compress PDF
+        </button>
+      </form>
+
+      <p class="mt-20">Made with ❤️ by Sandeep</p>
+    </div>
+  </body>
+  <script>
+    const form = document.querySelector('form');
+    const level = document.getElementById('level');
+    const compressButton = document.querySelector('button');
+    const pdfInput = document.querySelector('input[type=file]');
+    const placeholderName = document.querySelector('#placeholder-name');
+    const placeholderSize = document.querySelector('#placeholder-size');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      //TODO: call API
+    });
+
+    pdfInput.addEventListener('change', (e) => {
+      if (e.target.files[0] != null) {
+        placeholderName.innerText = e.target.files[0].name;
+        placeholderSize.innerText = (e.target.files[0].size / (1024 * 1024)).toFixed(2) + ' MB';
+        document;
+
+        //placeholderName.parentElement.classList.replace('border-gray-300', 'border-green-400');
+        level.disabled = false;
+        compressButton.disabled = false;
+      } else {
+        //placeholderName.parentElement.classList.replace('border-green-400', 'border-gray-300');
+        compressButton.disabled = true;
+        level.disabled = true;
+        placeholderName.innerText = 'Please select a PDF file';
+      }
+    });
+  </script>
+</html>
