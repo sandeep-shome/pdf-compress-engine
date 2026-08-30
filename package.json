@@ -2,9 +2,9 @@
   "name": "pdf-compress-engine",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "pnpm exec tsc",
+    "dev": "pnpm exec nodemon --watch src --exec tsx ./src/main.ts"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +25,8 @@
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.4.0",
+    "nodemon": "^3.1.14",
+    "tsx": "^4.23.12",
     "typescript": "^7.0.2"
   }
 }
