@@ -59,10 +59,10 @@
         <button
           type="submit"
           id="compress-submit-btn"
-          class="w-full h-10 bg-blue-400 mt-6 rounded-sm cursor-pointer text-white disabled:bg-blue-200 disabled:cursor-not-allowed"
+          class="w-full h-10 bg-blue-400 mt-6 rounded-sm cursor-pointer text-white disabled:bg-blue-200 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           disabled
         >
-          Compress PDF
+          <span id="button-text">Compress PDF</span>
         </button>
       </form>
 
@@ -74,6 +74,7 @@
       const pdfFileInput = document.getElementById('pdf-file-input');
       const compressionLevelInput = document.getElementById('compression-level-input');
       const compressSubmitBtn = document.getElementById('compress-submit-btn');
+      const buttonText = document.getElementById('button-text');
       const fileNameDisplay = document.getElementById('file-name-display');
       const fileSizeDisplay = document.getElementById('file-size-display');
 
@@ -104,6 +105,16 @@
         const selectedFile = pdfFileInput.files[0];
         if (!selectedFile) return;
 
+        // Activate loading state
+        compressSubmitBtn.disabled = true;
+        compressionLevelInput.disabled = true;
+        buttonText.innerText = 'Compressing...';
+
+        // Append FontAwesome spinning icon
+        const spinnerIcon = document.createElement('i');
+        spinnerIcon.className = 'fa-solid fa-spinner fa-spin';
+        compressSubmitBtn.prepend(spinnerIcon);
+
         const formData = new FormData();
         formData.append('file', selectedFile);
         formData.append('level', compressionLevelInput.value);
@@ -121,6 +132,12 @@
         } catch (error) {
           console.error('Compression Error:', error);
           alert('Something went wrong! Please try again.');
+        } finally {
+          // Reset loading state
+          spinnerIcon.remove();
+          buttonText.innerText = 'Compress PDF';
+          compressSubmitBtn.disabled = false;
+          compressionLevelInput.disabled = false;
         }
       });
     </script>
