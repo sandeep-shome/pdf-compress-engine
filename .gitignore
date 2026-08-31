@@ -1,4 +1,5 @@
 # Ignore common files for express ts app and docker
 node_modules/
 uploads/
+dist/
 .DS_Store
