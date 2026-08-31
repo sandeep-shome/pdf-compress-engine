@@ -1,6 +1,7 @@
 import express, { type Express } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import compressionRoute from './routes/compression.route.js';
 
 const app: Express = express();
 
@@ -15,5 +16,7 @@ app.get('/health', (req, res) => {
     status: 'ok',
   });
 });
+
+app.use('/api', compressionRoute);
 
 export default app;
