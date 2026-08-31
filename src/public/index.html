@@ -6,47 +6,59 @@
     <title>PDF Compressor Engine</title>
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
   <body>
     <div class="w-full h-screen flex flex-col items-center justify-center">
       <form
+        id="pdf-compress-form"
         accept-charset="utf-8"
-        class="w-5/6 md:3/6 lg:w-2/6 p-6 border border-gray-300 rounded-sm"
+        class="w-5/6 md:w-3/6 lg:w-2/6 p-6 border border-gray-300 rounded-sm"
       >
         <label
-          for="file"
-          class="w-full flex flex-col items-center justify-center h-60 border-[2px] border-dotted border-gray-300 relative"
+          for="pdf-file-input"
+          class="w-full flex flex-col items-center justify-center h-60 border-2 border-dashed border-gray-300 relative cursor-pointer"
         >
           <i
-            class="fa-regular fa-file-pdf absolute top-2/4 left-2/4 -translate-2/4 -z-10 text-gray-200 text-8xl"
+            class="fa-regular fa-file-pdf absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 text-gray-200 text-8xl"
           ></i>
-          <span id="placeholder-name" class="font-semibold">Please select a PDF file</span>
-          <span id="placeholder-size" class="font-semibold mt-2 display-none"></span>
-          <input type="file" name="file" id="file" accept="application/pdf" hidden />
+          <span id="file-name-display" class="font-semibold">Please select a PDF file</span>
+          <span id="file-size-display" class="font-semibold mt-2 hidden"></span>
+          <input
+            type="file"
+            name="pdfFile"
+            id="pdf-file-input"
+            accept="application/pdf"
+            class="hidden"
+          />
         </label>
+
         <div class="mt-6">
-          <label for="level">Compression level</label>
+          <label for="compression-level-input" class="block text-sm font-medium text-gray-700">
+            Compression level
+          </label>
           <input
             type="range"
-            name=""
-            id="level"
+            name="compressionLevel"
+            id="compression-level-input"
             min="1"
             max="3"
             value="1"
-            class="w-full accent-blue-400 accent-bg-gray-300"
+            class="w-full accent-blue-400 mt-2"
             disabled
           />
-          <div class="w-full flex items-center justify-between">
+          <div class="w-full flex items-center justify-between text-sm mt-1">
             <span class="text-green-600">Low</span>
             <span class="text-yellow-600">Medium</span>
             <span class="text-red-600">High</span>
           </div>
         </div>
+
         <button
           type="submit"
+          id="compress-submit-btn"
           class="w-full h-10 bg-blue-400 mt-6 rounded-sm cursor-pointer text-white disabled:bg-blue-200 disabled:cursor-not-allowed"
           disabled
         >
@@ -56,35 +68,61 @@
 
       <p class="mt-20">Made with ❤️ by Sandeep</p>
     </div>
+
+    <script>
+      const compressForm = document.getElementById('pdf-compress-form');
+      const pdfFileInput = document.getElementById('pdf-file-input');
+      const compressionLevelInput = document.getElementById('compression-level-input');
+      const compressSubmitBtn = document.getElementById('compress-submit-btn');
+      const fileNameDisplay = document.getElementById('file-name-display');
+      const fileSizeDisplay = document.getElementById('file-size-display');
+
+      pdfFileInput.addEventListener('change', (event) => {
+        const selectedFile = event.target.files[0];
+
+        if (selectedFile) {
+          const fileSizeInMB = (selectedFile.size / (1024 * 1024)).toFixed(2);
+          fileNameDisplay.innerText = selectedFile.name;
+          fileSizeDisplay.innerText = `${fileSizeInMB} MB`;
+          fileSizeDisplay.classList.remove('hidden');
+
+          compressionLevelInput.disabled = false;
+          compressSubmitBtn.disabled = false;
+        } else {
+          fileNameDisplay.innerText = 'Please select a PDF file';
+          fileSizeDisplay.innerText = '';
+          fileSizeDisplay.classList.add('hidden');
+
+          compressionLevelInput.disabled = true;
+          compressSubmitBtn.disabled = true;
+        }
+      });
+
+      compressForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const selectedFile = pdfFileInput.files[0];
+        if (!selectedFile) return;
+
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        formData.append('level', compressionLevelInput.value);
+
+        try {
+          const response = await fetch('http://localhost:4000/api/compress', {
+            method: 'POST',
+            body: formData,
+          });
+
+          if (!response.ok) throw new Error('Upload failed');
+
+          const result = await response.json();
+          console.log(result);
+        } catch (error) {
+          console.error('Compression Error:', error);
+          alert('Something went wrong! Please try again.');
+        }
+      });
+    </script>
   </body>
-  <script>
-    const form = document.querySelector('form');
-    const level = document.getElementById('level');
-    const compressButton = document.querySelector('button');
-    const pdfInput = document.querySelector('input[type=file]');
-    const placeholderName = document.querySelector('#placeholder-name');
-    const placeholderSize = document.querySelector('#placeholder-size');
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      //TODO: call API
-    });
-
-    pdfInput.addEventListener('change', (e) => {
-      if (e.target.files[0] != null) {
-        placeholderName.innerText = e.target.files[0].name;
-        placeholderSize.innerText = (e.target.files[0].size / (1024 * 1024)).toFixed(2) + ' MB';
-        document;
-
-        //placeholderName.parentElement.classList.replace('border-gray-300', 'border-green-400');
-        level.disabled = false;
-        compressButton.disabled = false;
-      } else {
-        //placeholderName.parentElement.classList.replace('border-green-400', 'border-gray-300');
-        compressButton.disabled = true;
-        level.disabled = true;
-        placeholderName.innerText = 'Please select a PDF file';
-      }
-    });
-  </script>
 </html>
