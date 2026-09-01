@@ -1,16 +1,17 @@
 import express, { type Express } from 'express';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import multer from 'multer';
 import fs from 'node:fs';
 import { compress } from './controllers/compression.controller.js';
+import { cwd } from 'node:process';
+import { fileURLToPath } from 'node:url';
 
 const app: Express = express();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const uploadDir = path.join(__dirname, '../uploads');
+const uploadDir = path.join(cwd(), 'uploads');
 
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
