@@ -10,6 +10,24 @@ Compress the PDF files locally using Node.js, GhostScript and Docker. No more cl
 
 _\*\* Docker is required for running the engine_
 
+## Run Using Image
+
+Pull the image
+
+```bash
+  docker pull sandeepshome/pdf-compress-engine:1.0.0
+```
+
+Start a container
+
+```bash
+  docker run -d -p 4000:4000 -v [Your desired output path]:/app/downloads --name pdf-compressor sandeepshome/pdf-compress-engine:1.0.0
+```
+
+_\*\* Please keep the port `4000` to avoid CORS error_
+
+_\*\* Please use an `absolute path` for output_
+
 ## Run Locally
 
 Clone the project
