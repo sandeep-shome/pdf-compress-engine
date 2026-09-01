@@ -23,9 +23,7 @@ export const compress = async (req: Request, res: Response, next: NextFunction):
     if (err instanceof Error) {
       res.status(400).json({
         message:
-          err instanceof Error
-            ? `Error: ${err.message}`
-            : 'PDF compression failed with unknown error',
+          err instanceof Error ? `${err.message}` : 'PDF compression failed with unknown error',
       });
     }
   }
