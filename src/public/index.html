@@ -36,23 +36,24 @@
         </label>
 
         <div class="mt-6">
-          <label for="compression-level-input" class="block text-sm font-medium text-gray-700">
-            Compression level
+          <label for="compression-depth-input" class="block text-sm font-medium text-gray-700">
+            Compression depth
           </label>
           <input
             type="range"
-            name="compressionLevel"
-            id="compression-level-input"
+            name="compressionDepth"
+            id="compression-depth-input"
             min="1"
-            max="3"
+            max="4"
             value="1"
             class="w-full accent-blue-400 mt-2"
             disabled
           />
           <div class="w-full flex items-center justify-between text-sm mt-1">
             <span class="text-green-600">Low</span>
-            <span class="text-yellow-600">Medium</span>
-            <span class="text-red-600">High</span>
+            <span class="text-blue-600">Medium</span>
+            <span class="text-yellow-600">High</span>
+            <span class="text-red-600">Extreme</span>
           </div>
         </div>
 
@@ -64,6 +65,14 @@
         >
           <span id="button-text">Compress PDF</span>
         </button>
+
+        <button
+          type="button"
+          id="reset-btn"
+          class="hidden mt-2 w-full h-10 bg-red-400 rounded-sm cursor-pointer text-white disabled:bg-blue-200 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        >
+          <span id="button-text">Compress another PDF</span>
+        </button>
       </form>
 
       <p class="mt-20">Made with ❤️ by Sandeep</p>
@@ -72,8 +81,9 @@
     <script>
       const compressForm = document.getElementById('pdf-compress-form');
       const pdfFileInput = document.getElementById('pdf-file-input');
-      const compressionLevelInput = document.getElementById('compression-level-input');
+      const compressionDepthInput = document.getElementById('compression-depth-input');
       const compressSubmitBtn = document.getElementById('compress-submit-btn');
+      const resetBtn = document.getElementById('reset-btn');
       const buttonText = document.getElementById('button-text');
       const fileNameDisplay = document.getElementById('file-name-display');
       const fileSizeDisplay = document.getElementById('file-size-display');
@@ -87,14 +97,14 @@
           fileSizeDisplay.innerText = `${fileSizeInMB} MB`;
           fileSizeDisplay.classList.remove('hidden');
 
-          compressionLevelInput.disabled = false;
+          compressionDepthInput.disabled = false;
           compressSubmitBtn.disabled = false;
         } else {
           fileNameDisplay.innerText = 'Please select a PDF file';
           fileSizeDisplay.innerText = '';
           fileSizeDisplay.classList.add('hidden');
 
-          compressionLevelInput.disabled = true;
+          compressionDepthInput.disabled = true;
           compressSubmitBtn.disabled = true;
         }
       });
@@ -107,7 +117,7 @@
 
         // Activate loading state
         compressSubmitBtn.disabled = true;
-        compressionLevelInput.disabled = true;
+        compressionDepthInput.disabled = true;
         buttonText.innerText = 'Compressing...';
 
         // Append FontAwesome spinning icon
@@ -117,7 +127,7 @@
 
         const formData = new FormData();
         formData.append('file', selectedFile);
-        formData.append('level', compressionLevelInput.value);
+        formData.append('depth', compressionDepthInput.value);
 
         try {
           const response = await fetch('http://localhost:4000/api/compress', {
@@ -126,6 +136,10 @@
           });
 
           if (!response.ok) throw new Error('Upload failed');
+
+          if (response.status === 201) {
+            resetBtn.classList.replace('hidden', 'block');
+          }
 
           const result = await response.json();
           console.log(result);
@@ -137,8 +151,13 @@
           spinnerIcon.remove();
           buttonText.innerText = 'Compress PDF';
           compressSubmitBtn.disabled = false;
-          compressionLevelInput.disabled = false;
+          compressionDepthInput.disabled = false;
         }
+      });
+
+      resetBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.navigation.reload();
       });
     </script>
   </body>
