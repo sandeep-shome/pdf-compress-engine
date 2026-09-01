@@ -1,14 +1,12 @@
 {
   "name": "pdf-compress-engine",
   "version": "1.0.0",
-  "description": "",
   "scripts": {
     "build": "pnpm exec rimraf dist && pnpm exec tsc",
     "dev": "pnpm exec nodemon --watch src --exec tsx ./src/main.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Sandeep<sandeepshome.dev@gmail.com>",
+  "license": "MIT",
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
