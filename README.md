@@ -15,7 +15,7 @@ _\*\* Docker is required for running the engine_
 Clone the project
 
 ```bash
-  git clone https://link-to-project
+  git clone https://github.com/sandeep-shome/pdf-compress-engine.git
 ```
 
 Go to the project directory
