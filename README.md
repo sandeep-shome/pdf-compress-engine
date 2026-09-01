@@ -1,6 +1,6 @@
 # 🚂 PDF-Compression-Engine
 
-Compress the PDF files locally using Node.js, GhostScript and Docker. No more cloud tensions for private PDF(s). Your PDF would't even leave your PC while compressing.
+Compress the PDF files locally using Node.js, GhostScript and Docker. No more cloud tensions for private PDF(s); your PDF won't even leave your PC while compressing.
 
 ## Tech Stack
 
