@@ -4,6 +4,7 @@ uploads/
 .vscode/
 dist/
 README.md
+LICENSE
 .gitignore
 .dockerignore
 Dockerfile*
