@@ -19,12 +19,12 @@ FROM node:20-alpine AS runner
 RUN apk add --no-cache ghostscript
 
 WORKDIR /app
+RUN chown -R node:node /app
 
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
-
-COPY --from=builder /app/src/public ./dist/public
+COPY --chown=node:node --from=builder /app/package.json ./
+COPY --chown=node:node --from=builder /app/node_modules ./node_modules
+COPY --chown=node:node --from=builder /app/dist ./dist
+COPY --chown=node:node --from=builder /app/src/public ./dist/public
 
 USER node
 
