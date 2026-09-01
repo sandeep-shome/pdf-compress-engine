@@ -1,5 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import { compressPDF } from '../utils/gs.js';
+import path from 'path';
+import { cwd } from 'process';
 
 export const compress = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -8,13 +10,17 @@ export const compress = async (req: Request, res: Response, next: NextFunction):
       res.status(400).json({
         message: 'Error: No file uploaded',
       });
+      return;
     }
 
     // Implement of PDF compression logic
-    const outputPath = `./downloads/${req.file?.filename}`;
+    const inputPath = path.resolve(req.file?.path!);
+    const outputDir = path.resolve(cwd(), 'downloads');
+    const outputFileName = `compressed-${req.file?.originalname}`;
+    const outputPath = path.join(outputDir, outputFileName);
     const compressionDepth = req.body.depth;
 
-    await compressPDF(req.file?.destination || '', outputPath, compressionDepth);
+    await compressPDF(inputPath, outputPath, compressionDepth);
 
     res.status(201).json({
       message: `PDF compressed successfully at ${outputPath}`,
